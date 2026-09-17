@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://116.202.210.102:39701/api";
+const API_BASE_URL = "/api";
 
 
 async function generateResponse(data) {

@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 
 from models.database import db
@@ -15,6 +15,21 @@ from routes.prompts import prompts_bp
 
 app = Flask(__name__)
 CORS(app)
+
+FRONTEND_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),
+    "frontend"
+)
+
+
+@app.route("/")
+def serve_frontend():
+    return send_from_directory(FRONTEND_DIR, "index.html")
+
+
+@app.route("/<path:path>")
+def serve_frontend_files(path):
+    return send_from_directory(FRONTEND_DIR, path)
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -49,4 +64,4 @@ with app.app_context():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=39701, debug=True)
