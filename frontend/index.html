@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prompt Engineering Playground</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>PromptLab</h2>
+                <span>Prompt Engineering Playground</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-screen="playground">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <span>Playground</span>
+                </button>
+
+                <button class="nav-item" data-screen="comparison">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="16" rx="1.5"/><rect x="14" y="4" width="7" height="16" rx="1.5"/></svg>
+                    <span>Comparison</span>
+                </button>
+
+                <button class="nav-item" data-screen="sweep">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2.5"/><line x1="4" y1="17" x2="20" y2="17"/><circle cx="15" cy="17" r="2.5"/></svg>
+                    <span>Parameter Sweep</span>
+                </button>
+
+                <button class="nav-item" data-screen="library">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H9v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M11 4h3.5A1.5 1.5 0 0 1 16 5.5v13A1.5 1.5 0 0 1 14.5 20H11Z"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+                    <span>Prompt Library</span>
+                </button>
+
+                <button class="nav-item" data-screen="history">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><polyline points="12 7.5 12 12 15.5 14"/></svg>
+                    <span>Execution History</span>
+                </button>
+            </nav>
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Header -->
+            <header class="topbar">
+                <div>
+                    <h1 id="screen-title">Prompt Playground</h1>
+                    <p id="screen-description">
+                        Experiment with prompts and LLM parameters.
+                    </p>
+                </div>
+
+                <div class="status">
+                    <span class="status-dot"></span>
+                    <span>API Connected</span>
+                </div>
+            </header>
+
+
+            <!-- Playground Screen -->
+            <section id="playground-screen" class="screen active">
+
+                <div class="playground-grid">
+
+                    <!-- Prompt Editor -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>Prompt Editor</h2>
+
+                            <select id="template-select">
+                                <option value="">Choose a template...</option>
+                            </select>
+
+                            <span id="prompt-counter">0 characters</span>
+                        </div>
+
+                        <textarea
+                            id="prompt-input"
+                            placeholder="Write your prompt here..."
+                        ></textarea>
+
+                        <div id="template-variables" class="template-variables"></div>
+
+                        <div class="editor-footer">
+                            <span id="token-counter">
+                                Estimated tokens: 0
+                            </span>
+
+                            <button id="clear-prompt" class="secondary-btn">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <!-- Parameters -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>Parameters</h2>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="temperature">
+                                Temperature
+                                <span id="temperature-value">0.7</span>
+                            </label>
+
+                            <input
+                                type="range"
+                                id="temperature"
+                                min="0"
+                                max="2"
+                                step="0.1"
+                                value="0.7"
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="top-p">
+                                Top P
+                                <span id="top-p-value">0.9</span>
+                            </label>
+
+                            <input
+                                type="range"
+                                id="top-p"
+                                min="0"
+                                max="1"
+                                step="0.05"
+                                value="0.9"
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="max-tokens">
+                                Max Tokens
+                                <span id="max-tokens-value">1000</span>
+                            </label>
+
+                            <input
+                                type="range"
+                                id="max-tokens"
+                                min="50"
+                                max="4096"
+                                step="50"
+                                value="1000"
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="system-prompt">
+                                System Prompt
+                            </label>
+
+                            <textarea
+                                id="system-prompt"
+                                placeholder="Optional system instructions..."
+                            ></textarea>
+                        </div>
+
+                        <div class="technique-section">
+                            <div class="form-group">
+                                <label for="technique-select">Prompt Technique</label>
+                                <select id="technique-select">
+                                    <option value="">No technique selected</option>
+                                    <option value="Zero-Shot">Zero-Shot Prompting</option>
+                                    <option value="Few-Shot">Few-Shot Prompting</option>
+                                    <option value="Chain-of-Thought">Chain-of-Thought</option>
+                                    <option value="Self-Consistency">Self-Consistency</option>
+                                    <option value="Role-Based">Role-Based Prompting</option>
+                                    <option value="Output Format Control">Output Format Control</option>
+                                    <option value="Instruction Decomposition">Instruction Decomposition</option>
+                                    <option value="Negative Prompting">Negative Prompting</option>
+                                </select>
+                            </div>
+
+                            <div id="technique-details" class="technique-details" aria-live="polite">
+                                Select a technique to see how it applies to the current prompt.
+                            </div>
+
+                            <div id="few-shot-examples" class="few-shot-examples hidden">
+                                <div class="few-shot-header">
+                                    <h3>Examples</h3>
+                                    <button id="add-example-button" class="secondary-btn" type="button">Add Example</button>
+                                </div>
+                                <div id="example-rows"></div>
+                                <p class="field-hint">Add up to 5 input/output examples.</p>
+                            </div>
+
+                            <div id="negative-prompting-controls" class="form-group hidden">
+                                <label for="negative-instructions">What should the model NOT do?</label>
+                                <textarea id="negative-instructions" placeholder="Example: Do not use technical jargon. Do not exceed 100 words. Do not include markdown."></textarea>
+                            </div>
+
+                            <div id="self-consistency-controls" class="form-group hidden">
+                                <label for="self-consistency-runs">Self-Consistency Runs <span id="self-consistency-runs-value">3</span></label>
+                                <input id="self-consistency-runs" type="range" min="3" max="5" step="1" value="3">
+                            </div>
+                        </div>
+
+
+                        <div class="playground-actions">
+                            <button id="generate-btn" class="primary-btn">
+                                Generate Response
+                            </button>
+
+                            <button id="save-current-prompt" class="secondary-btn" type="button">
+                                Save to Library
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- Output -->
+                <div class="panel output-panel">
+
+                    <div class="panel-header">
+                        <h2>AI Response</h2>
+
+                        <button id="copy-response" class="secondary-btn">
+                            Copy
+                        </button>
+                    </div>
+
+                    <div id="response-output" class="response-output">
+                        <p class="placeholder">
+                            Your AI response will appear here.
+                        </p>
+                    </div>
+
+
+                    <!-- Metrics -->
+                    <div id="metrics" class="metrics">
+
+                        <div class="metric">
+                            <span>Latency</span>
+                            <strong id="latency-metric">—</strong>
+                        </div>
+
+                        <div class="metric">
+                            <span>Prompt Tokens</span>
+                            <strong id="prompt-tokens-metric">—</strong>
+                        </div>
+
+                        <div class="metric">
+                            <span>Completion Tokens</span>
+                            <strong id="completion-tokens-metric">—</strong>
+                        </div>
+
+                        <div class="metric">
+                            <span>Total Tokens</span>
+                            <strong id="total-tokens-metric">—</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- Output Parser -->
+<div class="panel output-parser-panel">
+
+    <div class="panel-header">
+        <div>
+            <h2>Output Parser</h2>
+            <p>Parse and validate structured LLM output.</p>
+        </div>
+    </div>
+
+    <div class="parser-controls">
+
+        <div class="form-group">
+            <label for="parser-format">
+                Output Format
+            </label>
+
+            <select id="parser-format">
+                <option value="auto">Auto Detect</option>
+                <option value="json">JSON</option>
+                <option value="table">Markdown Table</option>
+                <option value="code">Code Blocks</option>
+                <option value="list">List</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="json-schema">
+                JSON Schema
+                <span class="field-hint">Optional</span>
+            </label>
+
+            <textarea
+                id="json-schema"
+                rows="6"
+                placeholder='Example:
+{
+  "type": "object",
+  "required": ["name"]
+}'
+            ></textarea>
+        </div>
+
+    </div>
+
+    <div class="parser-actions">
+
+        <button
+            id="parse-output-button"
+            class="primary-button"
+            type="button"
+        >
+            Parse Output
+        </button>
+
+        <button
+            id="validate-output-button"
+            class="secondary-button"
+            type="button"
+        >
+            Validate JSON
+        </button>
+
+    </div>
+
+    <div class="parser-status" id="parser-status"></div>
+
+    <div class="form-group">
+
+        <label for="parsed-output">
+            Parsed Output
+        </label>
+
+        <div
+            id="parsed-output"
+            class="parsed-output"
+        >
+            <p class="empty-state">
+                Parse an AI response to see structured output here.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+            </section>
+
+
+            <!-- Comparison Screen -->
+            <section id="comparison-screen" class="screen">
+    <div class="page-header">
+        <h1>Prompt Comparison</h1>
+        <p>Compare two prompts and their outputs side by side.</p>
+    </div>
+
+    <div class="comparison-grid">
+
+        <!-- Prompt A -->
+        <div class="panel comparison-panel">
+            <div class="panel-header">
+                <div>
+                    <h2>Prompt A</h2>
+                    <span class="comparison-label">First prompt</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comparison-prompt-a">Prompt</label>
+                <textarea
+                    id="comparison-prompt-a"
+                    rows="10"
+                    placeholder="Enter the first prompt..."
+                ></textarea>
+            </div>
+
+            <div class="parameter-grid">
+                <div class="form-group">
+                    <label for="comparison-temperature-a">
+                        Temperature
+                        <span id="comparison-temperature-a-value">0.7</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="comparison-temperature-a"
+                        min="0"
+                        max="2"
+                        step="0.1"
+                        value="0.7"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="comparison-top-p-a">
+                        Top P
+                        <span id="comparison-top-p-a-value">0.9</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="comparison-top-p-a"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value="0.9"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="comparison-max-tokens-a">
+                        Max Tokens
+                        <span id="comparison-max-tokens-a-value">1000</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="comparison-max-tokens-a"
+                        min="50"
+                        max="4096"
+                        step="50"
+                        value="1000"
+                    >
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Prompt B -->
+        <div class="panel comparison-panel">
+            <div class="panel-header">
+                <div>
+                    <h2>Prompt B</h2>
+                    <span class="comparison-label">Second prompt</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comparison-prompt-b">Prompt</label>
+                <textarea
+                    id="comparison-prompt-b"
+                    rows="10"
+                    placeholder="Enter the second prompt..."
+                ></textarea>
+            </div>
+
+            <div class="parameter-grid">
+                <div class="form-group">
+                    <label for="comparison-temperature-b">
+                        Temperature
+                        <span id="comparison-temperature-b-value">0.7</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="comparison-temperature-b"
+                        min="0"
+                        max="2"
+                        step="0.1"
+                        value="0.7"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="comparison-top-p-b">
+                        Top P
+                        <span id="comparison-top-p-b-value">0.9</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="comparison-top-p-b"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value="0.9"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="comparison-max-tokens-b">
+                        Max Tokens
+                        <span id="comparison-max-tokens-b-value">1000</span>
+                    </label>
+                    <input
+                        type="range"
+                        id="comparison-max-tokens-b"
+                        min="50"
+                        max="4096"
+                        step="50"
+                        value="1000"
+                    >
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Compare Button -->
+    <div class="comparison-actions">
+        <button id="compare-button" class="primary-button">
+            Compare Prompts
+        </button>
+    </div>
+
+
+    <!-- Comparison Results -->
+    <div id="comparison-results" class="comparison-results">
+
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Prompt A Output</h2>
+            </div>
+
+            <div id="comparison-output-a" class="output-content">
+                <p class="empty-state">
+                    Run a comparison to see the output.
+                </p>
+            </div>
+
+            <div class="metrics" id="comparison-metrics-a">
+                <div class="metric">
+                    <span>Latency</span>
+                    <strong>&mdash;</strong>
+                </div>
+
+                <div class="metric">
+                    <span>Tokens</span>
+                    <strong>&mdash;</strong>
+                </div>
+            </div>
+
+            <div class="output-rating">
+                <span>Rate this output:</span>
+                <div class="rating-stars" id="rating-a">
+                    <button type="button" data-rating="1">&#9733;</button>
+                    <button type="button" data-rating="2">&#9733;</button>
+                    <button type="button" data-rating="3">&#9733;</button>
+                    <button type="button" data-rating="4">&#9733;</button>
+                    <button type="button" data-rating="5">&#9733;</button>
+                </div>
+                <span class="rating-value" id="rating-value-a">Not rated</span>
+            </div>
+        </div>
+
+
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Prompt B Output</h2>
+            </div>
+
+            <div id="comparison-output-b" class="output-content">
+                <p class="empty-state">
+                    Run a comparison to see the output.
+                </p>
+            </div>
+
+            <div class="metrics" id="comparison-metrics-b">
+                <div class="metric">
+                    <span>Latency</span>
+                    <strong>&mdash;</strong>
+                </div>
+
+                <div class="metric">
+                    <span>Tokens</span>
+                    <strong>&mdash;</strong>
+                </div>
+            </div>
+
+            <div class="output-rating">
+                <span>Rate this output:</span>
+                <div class="rating-stars" id="rating-b">
+                    <button type="button" data-rating="1">&#9733;</button>
+                    <button type="button" data-rating="2">&#9733;</button>
+                    <button type="button" data-rating="3">&#9733;</button>
+                    <button type="button" data-rating="4">&#9733;</button>
+                    <button type="button" data-rating="5">&#9733;</button>
+                </div>
+                <span class="rating-value" id="rating-value-b">Not rated</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+            <!-- Parameter  -->
+            <section id="sweep-screen" class="screen">
+                <div class="page-header">
+                    <h1>Parameter Sweep</h1>
+                    <p>Run the same prompt with different parameter values.</p>
+                </div>
+                <div class="panel sweep-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Experiment Setup</h2>
+                            <p>Compare how different parameter values affect the response.</p>
+             </div>
+        </div>
+
+        <!-- Prompt -->
+        <div class="form-group">
+            <label for="sweep-prompt">Prompt</label>
+            <textarea
+                id="sweep-prompt"
+                rows="7"
+                placeholder="Enter a prompt to test..."
+            ></textarea>
+        </div>
+
+        <!-- Sweep Parameter -->
+        <div class="form-group">
+            <label for="sweep-parameter">Parameter to Sweep</label>
+
+            <select id="sweep-parameter">
+                <option value="temperature">Temperature</option>
+                <option value="top_p">Top P</option>
+                <option value="max_tokens">Max Tokens</option>
+            </select>
+        </div>
+
+        <!-- Parameter Values -->
+        <div class="form-group">
+            <label for="sweep-values">
+                Values
+                <span class="field-hint">
+                    Enter comma-separated values
+                </span>
+            </label>
+
+            <input
+                type="text"
+                id="sweep-values"
+                placeholder="Example: 0.2, 0.5, 0.8, 1.1"
+                value="0.2, 0.5, 0.8, 1.1"
+            >
+        </div>
+
+        <!-- Fixed Parameters -->
+        <div class="sweep-fixed-parameters">
+
+            <h3>Fixed Parameters</h3>
+
+            <div class="parameter-grid">
+
+                <div class="form-group">
+                    <label for="sweep-top-p">
+                        Top P
+                        <span id="sweep-top-p-value">0.9</span>
+                    </label>
+
+                    <input
+                        type="range"
+                        id="sweep-top-p"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value="0.9"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="sweep-temperature">
+                        Temperature
+                        <span id="sweep-temperature-value">0.7</span>
+                    </label>
+
+                    <input
+                        type="range"
+                        id="sweep-temperature"
+                        min="0"
+                        max="2"
+                        step="0.1"
+                        value="0.7"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="sweep-max-tokens">
+                        Max Tokens
+                        <span id="sweep-max-tokens-value">1000</span>
+                    </label>
+
+                    <input
+                        type="range"
+                        id="sweep-max-tokens"
+                        min="50"
+                        max="4096"
+                        step="50"
+                        value="1000"
+                    >
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Run -->
+        <div class="sweep-actions">
+            <button id="sweep-button" class="primary-button">
+                Run Parameter Sweep
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Results -->
+    <div id="sweep-results" class="sweep-results">
+
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Sweep Results</h2>
+                <span id="sweep-result-count"></span>
+            </div>
+
+            <div id="sweep-output">
+                <p class="empty-state">
+                    Run a parameter sweep to see the results.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+            <!-- Prompt Library Screen -->
+            <section id="library-screen" class="screen">
+
+    <div class="page-header">
+        <h1>Prompt Library</h1>
+        <p>Save, manage, and reuse your prompts.</p>
+    </div>
+
+    <!-- Library Toolbar -->
+    <div class="library-toolbar">
+
+        <div class="library-search">
+            <input
+                type="text"
+                id="library-search"
+                placeholder="Search prompts..."
+            >
+        </div>
+
+        <div class="library-filter">
+            <select id="library-category-filter">
+                <option value="">All Categories</option>
+                <option value="Content">Content</option>
+                <option value="Code">Code</option>
+                <option value="Analysis">Analysis</option>
+                <option value="Summarization">Summarization</option>
+                <option value="Translation">Translation</option>
+            </select>
+        </div>
+
+        <button id="new-prompt-button" class="primary-button">
+            + New Prompt
+        </button>
+
+    </div>
+
+
+    <!-- Prompt Form -->
+    <div id="prompt-form-panel" class="panel library-form-panel hidden">
+
+        <div class="panel-header">
+            <div>
+                <h2 id="prompt-form-title">Save Prompt</h2>
+                <p>Create a reusable prompt for your library.</p>
+            </div>
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-group">
+                <label for="library-prompt-name">Name</label>
+                <input
+                    type="text"
+                    id="library-prompt-name"
+                    placeholder="e.g. Blog Writer"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="library-prompt-category">Category</label>
+                <select id="library-prompt-category">
+                    <option value="">Select category</option>
+                    <option value="Content">Content</option>
+                    <option value="Code">Code</option>
+                    <option value="Analysis">Analysis</option>
+                    <option value="Summarization">Summarization</option>
+                    <option value="Translation">Translation</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            <label for="library-prompt-description">
+                Description
+            </label>
+
+            <input
+                type="text"
+                id="library-prompt-description"
+                placeholder="Briefly describe what this prompt does..."
+            >
+        </div>
+
+
+        <div class="form-group">
+            <label for="library-prompt-tags">
+                Tags
+            </label>
+
+            <input
+                type="text"
+                id="library-prompt-tags"
+                placeholder="e.g. writing, blog, content"
+            >
+        </div>
+
+
+        <div class="form-group">
+            <label for="library-prompt-text">
+                Prompt
+            </label>
+
+            <textarea
+                id="library-prompt-text"
+                rows="8"
+                placeholder="Enter your prompt..."
+            ></textarea>
+        </div>
+
+
+        <div class="parameter-grid">
+
+            <div class="form-group">
+                <label for="library-temperature">
+                    Temperature
+                </label>
+
+                <input
+                    type="number"
+                    id="library-temperature"
+                    min="0"
+                    max="2"
+                    step="0.1"
+                    value="0.7"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="library-top-p">
+                    Top P
+                </label>
+
+                <input
+                    type="number"
+                    id="library-top-p"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value="0.9"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="library-max-tokens">
+                    Max Tokens
+                </label>
+
+                <input
+                    type="number"
+                    id="library-max-tokens"
+                    min="50"
+                    max="4096"
+                    step="50"
+                    value="1000"
+                >
+            </div>
+
+        </div>
+
+
+        <div class="library-form-actions">
+
+            <button
+                id="save-prompt-button"
+                class="primary-button"
+            >
+                Save Prompt
+            </button>
+
+            <button
+                id="cancel-prompt-button"
+                class="secondary-button"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Prompt Cards -->
+    <div id="library-list" class="library-list">
+
+        <div class="empty-state">
+            Loading prompts...
+        </div>
+
+    </div>
+
+</section>
+
+      <!-- ==================================================
+     EXECUTION HISTORY
+     ================================================== -->
+
+<section id="history-screen" class="screen">
+
+    <div class="history-toolbar">
+
+        <div class="history-search">
+            <input
+                type="text"
+                id="history-search"
+                placeholder="Search execution history..."
+            >
+        </div>
+
+        <button
+            id="refresh-history-button"
+            class="secondary-button"
+            type="button"
+        >
+            Refresh
+        </button>
+
+    </div>
+
+    <div
+        id="history-list"
+        class="history-list"
+    >
+
+        <div class="empty-state">
+            Loading execution history...
+        </div>
+
+    </div>
+
+</section>
+
+        </main>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/output-parser.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,287 @@
+[
+  {
+    "id": "blog-post-generator",
+    "name": "Blog Post Generator",
+    "description": "Generate a structured blog post on a given topic.",
+    "category": "Content",
+    "technique": "Zero-Shot",
+    "prompt": "Write a blog post about {{topic}} for {{audience}}. The tone should be {{tone}} and the target length is approximately {{length}} words.",
+    "variables": ["topic", "audience", "tone", "length"],
+    "recommended_parameters": {
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "max_tokens": 1000
+    },
+    "example_output": "A structured blog post with an introduction, main sections, and conclusion."
+  },
+  {
+    "id": "email-drafter",
+    "name": "Email Drafter",
+    "description": "Draft a professional email from a short description.",
+    "category": "Content",
+    "technique": "Role-Based",
+    "prompt": "Act as a professional business communication specialist. Write an email to {{recipient}} regarding {{subject}}. The purpose of the email is {{purpose}}. Keep the tone {{tone}}.",
+    "variables": ["recipient", "subject", "purpose", "tone"],
+    "recommended_parameters": {
+      "temperature": 0.5,
+      "top_p": 0.9,
+      "max_tokens": 500
+    },
+    "example_output": "A concise professional email with greeting, body, and closing."
+  },
+  {
+    "id": "social-media-post",
+    "name": "Social Media Post",
+    "description": "Create an engaging social media post.",
+    "category": "Content",
+    "technique": "Output Format Control",
+    "prompt": "Create a social media post about {{topic}} for {{platform}}. Target audience: {{audience}}. Return the result with a headline, post body, and 3-5 relevant hashtags.",
+    "variables": ["topic", "platform", "audience"],
+    "recommended_parameters": {
+      "temperature": 0.8,
+      "top_p": 0.95,
+      "max_tokens": 400
+    },
+    "example_output": "Headline: ...\nPost: ...\nHashtags: #..."
+  },
+  {
+    "id": "product-description",
+    "name": "Product Description",
+    "description": "Generate a persuasive product description.",
+    "category": "Content",
+    "technique": "Role-Based",
+    "prompt": "Act as an experienced e-commerce copywriter. Write a product description for {{product}}. Highlight these features: {{features}}. Target customer: {{customer}}. Keep the description {{style}}.",
+    "variables": ["product", "features", "customer", "style"],
+    "recommended_parameters": {
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "max_tokens": 600
+    },
+    "example_output": "An engaging product description highlighting benefits and features."
+  },
+  {
+    "id": "code-explainer",
+    "name": "Code Explainer",
+    "description": "Explain code in simple language.",
+    "category": "Code",
+    "technique": "Role-Based",
+    "prompt": "Act as a programming instructor. Explain the following {{language}} code in simple terms. Break down what each important section does and explain the overall purpose.\n\nCode:\n{{code}}",
+    "variables": ["language", "code"],
+    "recommended_parameters": {
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "max_tokens": 1000
+    },
+    "example_output": "A step-by-step explanation of the code and its purpose."
+  },
+  {
+    "id": "bug-finder",
+    "name": "Bug Finder",
+    "description": "Analyze code and identify potential bugs.",
+    "category": "Code",
+    "technique": "Instruction Decomposition",
+    "prompt": "Analyze the following {{language}} code.\n\nFirst, identify syntax errors.\nSecond, identify logical or runtime issues.\nThird, explain why each issue occurs.\nFinally, suggest fixes.\n\nCode:\n{{code}}",
+    "variables": ["language", "code"],
+    "recommended_parameters": {
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "max_tokens": 1200
+    },
+    "example_output": "A list of detected issues followed by explanations and suggested fixes."
+  },
+  {
+    "id": "function-generator",
+    "name": "Function Generator",
+    "description": "Generate a function from a natural-language requirement.",
+    "category": "Code",
+    "technique": "Zero-Shot",
+    "prompt": "Write a {{language}} function that {{requirement}}. Include appropriate error handling and a brief explanation of how the function works.",
+    "variables": ["language", "requirement"],
+    "recommended_parameters": {
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "max_tokens": 800
+    },
+    "example_output": "A code block containing the requested function followed by an explanation."
+  },
+  {
+    "id": "api-documentation",
+    "name": "API Documentation",
+    "description": "Generate structured documentation for an API endpoint.",
+    "category": "Code",
+    "technique": "Output Format Control",
+    "prompt": "Create API documentation for the following endpoint:\n\nMethod: {{method}}\nEndpoint: {{endpoint}}\nPurpose: {{purpose}}\n\nReturn sections for: Description, Parameters, Request Example, Response Example, and Errors.",
+    "variables": ["method", "endpoint", "purpose"],
+    "recommended_parameters": {
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "max_tokens": 1000
+    },
+    "example_output": "Structured API documentation with request, response, parameters, and errors."
+  },
+  {
+    "id": "pros-cons",
+    "name": "Pros & Cons",
+    "description": "Analyze a topic by identifying advantages and disadvantages.",
+    "category": "Analysis",
+    "technique": "Instruction Decomposition",
+    "prompt": "Analyze {{topic}}.\n\nFirst list the main advantages.\nThen list the main disadvantages.\nFinally provide a balanced conclusion.\n\nUse clear bullet points.",
+    "variables": ["topic"],
+    "recommended_parameters": {
+      "temperature": 0.4,
+      "top_p": 0.9,
+      "max_tokens": 700
+    },
+    "example_output": "Pros, cons, and a balanced conclusion."
+  },
+  {
+    "id": "text-classifier",
+    "name": "Text Classifier",
+    "description": "Classify text into one of the provided categories.",
+    "category": "Analysis",
+    "technique": "Few-Shot",
+    "prompt": "Classify the following text into exactly one of these categories: {{categories}}.\n\nExamples:\n{{examples}}\n\nText to classify:\n{{text}}\n\nReturn only the category name.",
+    "variables": ["categories", "examples", "text"],
+    "recommended_parameters": {
+      "temperature": 0.1,
+      "top_p": 0.9,
+      "max_tokens": 100
+    },
+    "example_output": "One category name."
+  },
+  {
+    "id": "sentiment-analyzer",
+    "name": "Sentiment Analyzer",
+    "description": "Analyze the sentiment of text.",
+    "category": "Analysis",
+    "technique": "Output Format Control",
+    "prompt": "Analyze the sentiment of the following text.\n\nText:\n{{text}}\n\nReturn JSON with exactly these fields:\n{\n  \"sentiment\": \"positive, negative, or neutral\",\n  \"confidence\": \"high, medium, or low\",\n  \"reason\": \"short explanation\"\n}",
+    "variables": ["text"],
+    "recommended_parameters": {
+      "temperature": 0.1,
+      "top_p": 0.9,
+      "max_tokens": 250
+    },
+    "example_output": "{\"sentiment\":\"positive\",\"confidence\":\"high\",\"reason\":\"The text expresses satisfaction.\"}"
+  },
+  {
+    "id": "math-problem-solver",
+    "name": "Math Problem Solver",
+    "description": "Solve a mathematical problem step by step.",
+    "category": "Analysis",
+    "technique": "Chain-of-Thought",
+    "prompt": "Solve the following mathematical problem carefully: {{problem}}.\n\nBreak the solution into clear steps and provide the final answer separately.",
+    "variables": ["problem"],
+    "recommended_parameters": {
+      "temperature": 0.1,
+      "top_p": 0.9,
+      "max_tokens": 700
+    },
+    "example_output": "A step-by-step solution followed by the final answer."
+  },
+  {
+    "id": "text-summarizer",
+    "name": "Text Summarizer",
+    "description": "Summarize a long piece of text.",
+    "category": "Summarization",
+    "technique": "Zero-Shot",
+    "prompt": "Summarize the following text in approximately {{length}} words. Preserve the key ideas and remove unnecessary details.\n\nText:\n{{text}}",
+    "variables": ["length", "text"],
+    "recommended_parameters": {
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "max_tokens": 600
+    },
+    "example_output": "A concise summary containing the main ideas."
+  },
+  {
+    "id": "key-points-extractor",
+    "name": "Key Points Extractor",
+    "description": "Extract the most important points from text.",
+    "category": "Summarization",
+    "technique": "Instruction Decomposition",
+    "prompt": "Read the following text and extract the {{count}} most important points.\n\nReturn them as a numbered list.\n\nText:\n{{text}}",
+    "variables": ["count", "text"],
+    "recommended_parameters": {
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "max_tokens": 500
+    },
+    "example_output": "1. Key point one\n2. Key point two\n3. Key point three"
+  },
+  {
+    "id": "entity-extractor",
+    "name": "Entity Extractor",
+    "description": "Extract important entities from text.",
+    "category": "Summarization",
+    "technique": "Output Format Control",
+    "prompt": "Extract the important entities from the following text.\n\nReturn JSON with arrays for: people, organizations, locations, dates, and products.\n\nText:\n{{text}}",
+    "variables": ["text"],
+    "recommended_parameters": {
+      "temperature": 0.1,
+      "top_p": 0.9,
+      "max_tokens": 500
+    },
+    "example_output": "{\"people\":[],\"organizations\":[],\"locations\":[],\"dates\":[],\"products\":[]}"
+  },
+  {
+    "id": "meeting-notes",
+    "name": "Meeting Notes",
+    "description": "Turn raw meeting content into organized notes.",
+    "category": "Summarization",
+    "technique": "Instruction Decomposition",
+    "prompt": "Convert the following meeting transcript into organized notes.\n\nInclude:\n1. Summary\n2. Key decisions\n3. Action items\n4. Open questions\n\nTranscript:\n{{transcript}}",
+    "variables": ["transcript"],
+    "recommended_parameters": {
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "max_tokens": 1000
+    },
+    "example_output": "Organized meeting notes with summary, decisions, action items, and questions."
+  },
+  {
+    "id": "translator",
+    "name": "Translator",
+    "description": "Translate text between languages.",
+    "category": "Translation",
+    "technique": "Zero-Shot",
+    "prompt": "Translate the following text from {{source_language}} to {{target_language}}. Preserve the original meaning and tone.\n\nText:\n{{text}}",
+    "variables": ["source_language", "target_language", "text"],
+    "recommended_parameters": {
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "max_tokens": 600
+    },
+    "example_output": "The translated text in the requested language."
+  },
+  {
+    "id": "tone-adjuster",
+    "name": "Tone Adjuster",
+    "description": "Rewrite text using a different tone.",
+    "category": "Language",
+    "technique": "Role-Based",
+    "prompt": "Rewrite the following text using a {{tone}} tone. Preserve the original meaning and important information.\n\nText:\n{{text}}",
+    "variables": ["tone", "text"],
+    "recommended_parameters": {
+      "temperature": 0.6,
+      "top_p": 0.9,
+      "max_tokens": 600
+    },
+    "example_output": "The rewritten text using the requested tone."
+  },
+  {
+    "id": "grammar-checker",
+    "name": "Grammar Checker",
+    "description": "Find and correct grammar and spelling mistakes.",
+    "category": "Language",
+    "technique": "Output Format Control",
+    "prompt": "Check the following text for grammar, spelling, punctuation, and clarity issues.\n\nReturn:\n1. Corrected text\n2. List of important corrections\n\nText:\n{{text}}",
+    "variables": ["text"],
+    "recommended_parameters": {
+      "temperature": 0.1,
+      "top_p": 0.9,
+      "max_tokens": 700
+    },
+    "example_output": "Corrected text followed by a list of corrections."
+  }
+]
